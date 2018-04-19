@@ -19,6 +19,10 @@ class Graph{
 			delete [] data;
 		}
 
+		int getVertices() const {
+			return vertices;
+		}
+
 		void addEdge(const int vertex1, const int vertex2) {
 			if (vertex1 >= vertices || vertex2 >= vertices) {
 				return;
