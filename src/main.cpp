@@ -10,7 +10,7 @@ int main() {
 		// load vertex
 		std::cin >> v1 >> count;
 		// load edges
-		for (int j = 0; i < count; ++j) {
+		for (int j = 0; j < count; ++j) {
 			std::cin >> v2;
 			graph.addEdge(v1, v2);
 		}

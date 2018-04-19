@@ -2,6 +2,8 @@
 
 #include <random>
 #include <iostream>
+#include "Graph.h"
+#include <vector>
 
 class Individual {
 	private:
@@ -10,10 +12,17 @@ class Individual {
 		int fitness = {0};
 		bool setFitness{false};
 
-		double getRandom() {
+		double getRandomProbability() {
 			std::random_device seed;
 			std::mt19937 generator(seed());
 			std::uniform_real_distribution<> distribution(0.0, 1.0);
+			return distribution(generator);
+		}
+
+		int getRandomNumber() {
+			std::random_device seed;
+			std::mt19937 generator(seed());
+			std::uniform_int_distribution<> distribution(0, size-1);
 			return distribution(generator);
 		}
 
@@ -37,7 +46,7 @@ class Individual {
 			}
 			this->solution = new bool[this->size];
 			for (int i = 0; i < n; i++) {
-				this->solution[i] = this->getRandom() >= 0.5;
+				this->solution[i] = this->getRandomProbability() >= 0.5;
 			}
 		};
 
@@ -59,13 +68,24 @@ class Individual {
 			return fitness;
 		}
 
-		void Repair() {
-			//@todo make some operation repair
-		}
+		void Repair(Graph & graph) {
+			for (int i = 0; i < size; i++) {
+				if (this->solution[i]) continue;
+				bool haveMarkedNeighbour = false;
+				auto & neighbour = graph.vertexNeighbour(i);
+				for (int j = 0; j < neighbour.size(); j++) {
+					haveMarkedNeighbour = haveMarkedNeighbour || solution[neighbour[j]];
+				}
+
+				if (!haveMarkedNeighbour) {
+					this->solution[i] = true;
+				}
+			}
+		};
 
 		void Mutation() {
-			setFitness = false;
-			//@todo random change some bit...
+			auto num = this->getRandomNumber();
+			solution[num] = !solution[num];
 		}
 
 		~Individual() {

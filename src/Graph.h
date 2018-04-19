@@ -26,4 +26,8 @@ class Graph{
 			data[vertex1].push_back(vertex2);
 			data[vertex2].push_back(vertex1);
 		}
+
+		std::vector<int> & vertexNeighbour(int vertex) {
+			return data[vertex];
+		}
 };
