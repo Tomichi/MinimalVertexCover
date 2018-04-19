@@ -10,10 +10,17 @@ class Individual {
 		int fitness = {0};
 		bool setFitness{false};
 
-		double getRandom() {
+		double getRandomProbability() {
 			std::random_device seed;
 			std::mt19937 generator(seed());
 			std::uniform_real_distribution<> distribution(0.0, 1.0);
+			return distribution(generator);
+		}
+
+		int getRandomNumber() {
+			std::random_device seed;
+			std::mt19937 generator(seed());
+			std::uniform_int_distribution<> distribution(0, size-1);
 			return distribution(generator);
 		}
 
@@ -37,7 +44,7 @@ class Individual {
 			}
 			this->solution = new bool[this->size];
 			for (int i = 0; i < n; i++) {
-				this->solution[i] = this->getRandom() >= 0.5;
+				this->solution[i] = this->getRandomProbability() >= 0.5;
 			}
 		};
 
@@ -64,8 +71,8 @@ class Individual {
 		}
 
 		void Mutation() {
-			setFitness = false;
-			//@todo random change some bit...
+			auto num = this->getRandomNumber();
+			solution[num] = !solution[num];
 		}
 
 		~Individual() {
