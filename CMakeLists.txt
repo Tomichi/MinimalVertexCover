@@ -6,4 +6,6 @@ set(CMAKE_CXX_STANDARD 11)
 add_executable(MinimalVertexCover
         src/main.cpp
         src/Individual.h
-        src/Graph.h)
+        src/Graph.h
+        src/Population.h
+        )
