@@ -2,6 +2,8 @@
 
 #include <random>
 #include <iostream>
+#include "Graph.h"
+#include <vector>
 
 class Individual {
 	private:
@@ -66,9 +68,20 @@ class Individual {
 			return fitness;
 		}
 
-		void Repair() {
-			//@todo make some operation repair
-		}
+		void Repair(Graph & graph) {
+			for (int i = 0; i < size; i++) {
+				if (this->solution[i]) continue;
+				bool haveMarkedNeighbour = false;
+				auto & neighbour = graph.vertexNeighbour(i);
+				for (int j = 0; j < neighbour.size(); j++) {
+					haveMarkedNeighbour = haveMarkedNeighbour || solution[neighbour[j]];
+				}
+
+				if (!haveMarkedNeighbour) {
+					this->solution[i] = true;
+				}
+			}
+		};
 
 		void Mutation() {
 			auto num = this->getRandomNumber();
