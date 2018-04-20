@@ -7,7 +7,7 @@ int main() {
 	std::cout.tie();
 	int vertices, edges, count, v1, v2;
 	std::cin >> vertices >> edges;
-	Graph * graph = new Graph(vertices, edges);
+	auto graph = std::make_shared<Graph> (vertices, edges);
 	for (int i = 0; i < vertices; i++) {
 		// load vertex
 		std::cin >> v1 >> count;
@@ -20,11 +20,9 @@ int main() {
 
 	int numberOfGeneration;
 	std::cin >> numberOfGeneration;
-	Population *population = new Population(graph, numberOfGeneration);
+	auto population = std::make_unique<Population>(graph, numberOfGeneration);
 	population->improve();
 
-	delete population;
-	delete graph;
 	std::cout << "END";
 	return 0;
 }

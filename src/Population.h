@@ -2,17 +2,18 @@
 
 #include <vector>
 #include <climits>
+#include <memory>
 #include "Individual.h"
 
 const int SIZE_POPULATION = 20;
 
-class Population{
+class Population {
 	private:
-		std::vector<Individual*> currentPopulation;
-		std::vector<Individual*> nextPopulation;
-		Individual * best{};
+		std::vector<std::shared_ptr<Individual>> currentPopulation;
+		std::vector<std::shared_ptr<Individual>> nextPopulation;
+		std::shared_ptr<Individual> best{};
 		int bestFitness;
-		Graph * graph;
+		std::shared_ptr<Graph> graph;
 		int numberOfGeneration;
 
 		void updateBestIndividual() {
@@ -27,16 +28,16 @@ class Population{
 		int getRandomNumber(int maxsize) {
 			std::random_device seed;
 			std::mt19937 generator(seed());
-			std::uniform_int_distribution<> distribution(0, maxsize-1);
+			std::uniform_int_distribution<> distribution(0, maxsize - 1);
 			return distribution(generator);
 		}
 
 	public:
-		Population(Graph * graph, const int n) {
+		Population(std::shared_ptr<Graph> & graph, const int n) {
 			this->graph = graph;
 			this->numberOfGeneration = n;
 			bestFitness = INT_MAX;
-			best = new Individual(graph->getVertices());
+			best = std::make_shared<Individual>(graph->getVertices());
 			// init Population
 			for (int i = 0; i < SIZE_POPULATION; i++) {
 				currentPopulation.emplace_back(new Individual(graph->getVertices()));
@@ -45,12 +46,12 @@ class Population{
 			updateBestIndividual();
 		}
 
-
 		int select() {
 			int index1 = getRandomNumber((int) currentPopulation.size());
 			int index2 = getRandomNumber((int) currentPopulation.size());
 
-			return (currentPopulation[index1]->getFitness() > currentPopulation[index2]->getFitness()) ? index2 : index1;
+			return (currentPopulation[index1]->getFitness() > currentPopulation[index2]->getFitness()) ? index2
+			                                                                                           : index1;
 		}
 
 		void improve() {
@@ -61,14 +62,15 @@ class Population{
 				}
 
 				for (int j = 0; j < SIZE_POPULATION; j++) {
-					this->nextPopulation.emplace_back(new Individual(
+					this->nextPopulation.emplace_back(std::make_unique<Individual>(
 							this->currentPopulation[select()],
 							this->currentPopulation[select()])
 					);
 				}
 
 				this->currentPopulation.clear();
-				this->currentPopulation = this->nextPopulation;
+				this->currentPopulation = std::move(this->nextPopulation);
+
 				for (int j = 0; j < (int) this->currentPopulation.size(); j++) {
 					//int randNumber = this->getRandomNumber((int) this->currentPopulation.size());
 					this->currentPopulation[j]->mutate();
@@ -81,9 +83,9 @@ class Population{
 				}
 
 				this->updateBestIndividual();
-				 //clearing screen
+				//clearing screen
 				std::cout << "\033[2J\033[1;1H";
-				std::cout << "Generation " << i+1 << ". fitness " << bestFitness <<"\n";
+				std::cout << "Generation " << i + 1 << ". fitness " << bestFitness << "\n";
 			}
 			this->printBest();
 		}
@@ -100,12 +102,7 @@ class Population{
 			if (this->currentPopulation.size() == 0) {
 				this->currentPopulation.clear();
 			}
-
-			delete best;
 		}
-
-
-
 
 
 };

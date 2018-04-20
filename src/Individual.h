@@ -4,7 +4,8 @@
 #include <iostream>
 #include "Graph.h"
 #include <vector>
-#include <set>
+#include <memory>
+const double CROSS_OVER = 0.5;
 
 class Individual {
 	private:
@@ -30,9 +31,8 @@ class Individual {
 		int computeFitness() const {
 			int sum = 0;
 			for (int i = 0; i < this->size; i++) {
-				if (this->solution[i]) {
-					++sum;
-				}
+				if (!this->solution[i]) continue;
+				++sum;
 			}
 
 			return sum;
@@ -47,23 +47,20 @@ class Individual {
 			}
 			this->solution = new bool[this->size];
 			for (int i = 0; i < n; i++) {
-				this->solution[i] = this->getRandomProbability() >= 0.5;
+				this->solution[i] = this->getRandomProbability() >= CROSS_OVER;
 			}
 		};
 
-		Individual(const Individual * a, const Individual * b) {
+		Individual(const std::shared_ptr<Individual> & a, const std::shared_ptr<Individual> & b) {
 			std::random_device seed;
 			std::mt19937 generator(seed());
 			std::uniform_real_distribution<> distribution(0.0, 1.0);
-
 			this->size = a->size;
 			this->solution = new bool[this->size];
 			// operator crossover
 			for (int i = 0; i < this->size; i++) {
 				this->solution[i] = (distribution(generator) > CROSS_OVER) ? a->solution[i] : b->solution[i];
 			}
-
-
 		}
 
 		int getFitness() {
@@ -75,7 +72,7 @@ class Individual {
 			return fitness;
 		}
 
-		void Repair(Graph * graph) {
+		void Repair(std::shared_ptr<Graph> & graph) {
 			for (int i = 0; i < size; i++) {
 				if (this->solution[i]) continue;
 				std::vector<int> neighbour = graph->vertexNeighbour(i);
@@ -104,7 +101,7 @@ class Individual {
 			}
 		}
 
-		void copy(const Individual * individual) {
+		void copy(const std::shared_ptr<Individual> & individual) {
 			for (int i = 0; i < size; i++) {
 				this->solution[i] = individual->solution[i];
 			}
