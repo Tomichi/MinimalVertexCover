@@ -4,7 +4,7 @@
 #include <climits>
 #include "Individual.h"
 
-const int SIZE_POPULATION = 40;
+const int SIZE_POPULATION = 20;
 
 class Population{
 	private:
@@ -69,9 +69,10 @@ class Population{
 
 				this->currentPopulation.clear();
 				this->currentPopulation = this->nextPopulation;
-				for (int j = 0; j < SIZE_POPULATION /2; j++) {
-					int randNumber = this->getRandomNumber((int) this->currentPopulation.size());
-					this->currentPopulation[randNumber]->Mutation();
+				for (int j = 0; j < (int) this->currentPopulation.size(); j++) {
+					//int randNumber = this->getRandomNumber((int) this->currentPopulation.size());
+					this->currentPopulation[j]->mutate();
+					this->currentPopulation[j]->mutate();
 				}
 				this->nextPopulation.emplace_back(this->best);
 
@@ -80,9 +81,9 @@ class Population{
 				}
 
 				this->updateBestIndividual();
-				// clearing screen
-				//std::cout << "\033[2J\033[1;1H";
-				std::cout << "Generation " << i << ". fitness " << bestFitness <<"\n";
+				 //clearing screen
+				std::cout << "\033[2J\033[1;1H";
+				std::cout << "Generation " << i+1 << ". fitness " << bestFitness <<"\n";
 			}
 			this->printBest();
 		}
