@@ -20,10 +20,10 @@ class Individual {
 			return distribution(generator);
 		}
 
-		int getRandomNumber() {
+		int getRandomNumber(int max) {
 			std::random_device seed;
 			std::mt19937 generator(seed());
-			std::uniform_int_distribution<> distribution(0, size - 1);
+			std::uniform_int_distribution<> distribution(0, max - 1);
 			return distribution(generator);
 		}
 
@@ -51,15 +51,6 @@ class Individual {
 			}
 		};
 
-		Individual(const Individual & a, const Individual & b) {
-			this->size = a.size;
-			this->solution = new bool[this->size];
-			// operator crossover
-			for (int i = 0; i < this->size; i++) {
-				this->solution[i] = (i >= a.size / 2) ? a.solution[i] : b.solution[i];
-			}
-		}
-
 		Individual(const Individual * a, const Individual * b) {
 			std::random_device seed;
 			std::mt19937 generator(seed());
@@ -69,7 +60,7 @@ class Individual {
 			this->solution = new bool[this->size];
 			// operator crossover
 			for (int i = 0; i < this->size; i++) {
-				this->solution[i] = (distribution(generator) > 0.5) ? a->solution[i] : b->solution[i];
+				this->solution[i] = (distribution(generator) > CROSS_OVER) ? a->solution[i] : b->solution[i];
 			}
 
 
@@ -94,23 +85,16 @@ class Individual {
 					}
 				}
 			}
+			this->setFitness = false;
 		};
 
-		int checkSolution(Graph * graph) {
-			std::set<int> check;
-			for (int i = 0; i < size; i++) {
-				if (this->solution[i]) continue;
-				auto neighbour = graph->vertexNeighbour(i);
-				for (int j = 0; j < (int) neighbour.size(); j++) {
-					check.insert(neighbour[j]);
-				}
+		void mutate() {
+			int randCycle = this->getRandomNumber(3);
+			for (int i = 0; i < randCycle; i++) {
+				auto num = this->getRandomNumber(size);
+				solution[num] = !solution[num];
 			}
-			return (int) check.size();
-		}
 
-		void Mutation() {
-			auto num = this->getRandomNumber();
-			solution[num] = !solution[num];
 		}
 
 		~Individual() {
