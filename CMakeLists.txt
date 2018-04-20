@@ -3,6 +3,8 @@ project(MinimalVertexCover)
 
 set(CMAKE_CXX_STANDARD 11)
 
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic -O2")
+
 add_executable(MinimalVertexCover
         src/main.cpp
         src/Individual.h
