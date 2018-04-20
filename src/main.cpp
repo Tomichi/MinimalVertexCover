@@ -1,9 +1,10 @@
 #include <iostream>
 #include "Individual.h"
-#include "Graph.h"
 #include "Population.h"
 
 int main() {
+	std::cout.sync_with_stdio(false);
+	std::cout.tie();
 	int vertices, edges, count, v1, v2;
 	std::cin >> vertices >> edges;
 	Graph * graph = new Graph(vertices, edges);

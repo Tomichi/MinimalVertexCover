@@ -4,7 +4,7 @@
 #include <climits>
 #include "Individual.h"
 
-const int SIZE_POPULATION = 20;
+const int SIZE_POPULATION = 40;
 
 class Population{
 	private:
@@ -16,7 +16,7 @@ class Population{
 		int numberOfGeneration;
 
 		void updateBestIndividual() {
-			for (int i = 0; i < currentPopulation.size(); ++i) {
+			for (int i = 0; i < (int) currentPopulation.size(); ++i) {
 				if (bestFitness > currentPopulation[i]->getFitness()) {
 					bestFitness = currentPopulation[i]->getFitness();
 					best->copy(currentPopulation[i]);
@@ -54,7 +54,6 @@ class Population{
 		}
 
 		void improve() {
-			int offspring1, offspring2;
 			// print current results
 			for (int i = 0; i < this->numberOfGeneration; i++) {
 				if (this->nextPopulation.size() != 0) {
@@ -62,9 +61,10 @@ class Population{
 				}
 
 				for (int j = 0; j < SIZE_POPULATION; j++) {
-					offspring1 = select();
-					offspring2 = select();
-					this->nextPopulation.emplace_back(new Individual(this->currentPopulation[offspring1], this->currentPopulation[offspring2]));
+					this->nextPopulation.emplace_back(new Individual(
+							this->currentPopulation[select()],
+							this->currentPopulation[select()])
+					);
 				}
 
 				this->currentPopulation.clear();
@@ -75,11 +75,13 @@ class Population{
 				}
 				this->nextPopulation.emplace_back(this->best);
 
-				for (int j = 0; j < this->currentPopulation.size(); j++) {
+				for (int j = 0; j < (int) this->currentPopulation.size(); j++) {
 					this->currentPopulation[j]->Repair(this->graph);
 				}
 
 				this->updateBestIndividual();
+				// clearing screen
+				//std::cout << "\033[2J\033[1;1H";
 				std::cout << "Generation " << i << ". fitness " << bestFitness <<"\n";
 			}
 			this->printBest();
@@ -87,7 +89,6 @@ class Population{
 
 		void printBest() {
 			this->best->Print();
-			std::cout << "\n" << this->best->checkSolution(graph) << "\n";
 		}
 
 		~Population() {

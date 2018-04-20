@@ -68,7 +68,6 @@ class Individual {
 			this->size = a->size;
 			this->solution = new bool[this->size];
 			// operator crossover
-
 			for (int i = 0; i < this->size; i++) {
 				this->solution[i] = (distribution(generator) > 0.5) ? a->solution[i] : b->solution[i];
 			}
@@ -88,16 +87,11 @@ class Individual {
 		void Repair(Graph * graph) {
 			for (int i = 0; i < size; i++) {
 				if (this->solution[i]) continue;
-				bool haveMarkedNeighbour = false;
 				std::vector<int> neighbour = graph->vertexNeighbour(i);
 				for (int j = 0; j < (int) neighbour.size(); j++) {
-					if (solution[neighbour[j]]) {
-						haveMarkedNeighbour = true;
+					if (!solution[neighbour[j]]) {
+						this->solution[neighbour[j]] = true;
 					}
-				}
-
-				if (!haveMarkedNeighbour) {
-					this->solution[i] = true;
 				}
 			}
 		};
@@ -107,7 +101,7 @@ class Individual {
 			for (int i = 0; i < size; i++) {
 				if (this->solution[i]) continue;
 				auto neighbour = graph->vertexNeighbour(i);
-				for (int j = 0; j < neighbour.size(); j++) {
+				for (int j = 0; j < (int) neighbour.size(); j++) {
 					check.insert(neighbour[j]);
 				}
 			}
