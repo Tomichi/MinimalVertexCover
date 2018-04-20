@@ -108,7 +108,7 @@ class Individual {
 			for (int i = 0; i < size; i++) {
 				this->solution[i] = individual->solution[i];
 			}
-			setFitness = true;
+			setFitness = individual->setFitness;
 			fitness = individual->fitness;
 		}
 

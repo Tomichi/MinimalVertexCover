@@ -74,7 +74,7 @@ class Population{
 					this->currentPopulation[j]->mutate();
 					this->currentPopulation[j]->mutate();
 				}
-				this->nextPopulation.emplace_back(this->best);
+				this->currentPopulation.emplace_back(this->best);
 
 				for (int j = 0; j < (int) this->currentPopulation.size(); j++) {
 					this->currentPopulation[j]->Repair(this->graph);
