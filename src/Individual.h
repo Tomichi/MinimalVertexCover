@@ -5,6 +5,7 @@
 #include "Graph.h"
 #include <vector>
 #include <memory>
+#include <omp.h>
 const double CROSS_OVER = 0.5;
 
 class Individual {
@@ -58,6 +59,7 @@ class Individual {
 			this->size = a->size;
 			this->solution = new bool[this->size];
 			// operator crossover
+			#pragma omp parallel for
 			for (int i = 0; i < this->size; i++) {
 				this->solution[i] = (distribution(generator) > CROSS_OVER) ? a->solution[i] : b->solution[i];
 			}
@@ -76,6 +78,7 @@ class Individual {
 			for (int i = 0; i < size; i++) {
 				if (this->solution[i]) continue;
 				std::vector<int> neighbour = graph->vertexNeighbour(i);
+				#pragma omp parallel for
 				for (int j = 0; j < (int) neighbour.size(); j++) {
 					if (!solution[neighbour[j]]) {
 						this->solution[neighbour[j]] = true;
@@ -86,12 +89,8 @@ class Individual {
 		};
 
 		void mutate() {
-			int randCycle = this->getRandomNumber(3);
-			for (int i = 0; i < randCycle; i++) {
 				auto num = this->getRandomNumber(size);
 				solution[num] = !solution[num];
-			}
-
 		}
 
 		~Individual() {
@@ -102,6 +101,7 @@ class Individual {
 		}
 
 		void copy(const std::shared_ptr<Individual> & individual) {
+			#pragma omp parallel for
 			for (int i = 0; i < size; i++) {
 				this->solution[i] = individual->solution[i];
 			}
