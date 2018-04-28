@@ -2,6 +2,9 @@
 
 #include<vector>
 
+std::random_device seed;
+std::mt19937 generator(seed());
+
 class Graph{
 	private:
 		int vertices = { 0 };

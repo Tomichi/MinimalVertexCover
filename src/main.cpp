@@ -18,6 +18,7 @@ int main() {
 		}
 	}
 
+	omp_set_num_threads(1);
 	int numberOfGeneration;
 	std::cin >> numberOfGeneration;
 	auto population = std::make_unique<Population>(graph, numberOfGeneration);

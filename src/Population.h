@@ -5,7 +5,7 @@
 #include <memory>
 #include "Individual.h"
 
-const int SIZE_POPULATION = 20;
+const int SIZE_POPULATION = 200;
 
 class Population {
 	private:
@@ -26,8 +26,6 @@ class Population {
 		}
 
 		int getRandomNumber(int maxsize) {
-			std::random_device seed;
-			std::mt19937 generator(seed());
 			std::uniform_int_distribution<> distribution(0, maxsize - 1);
 			return distribution(generator);
 		}
@@ -71,14 +69,12 @@ class Population {
 				this->currentPopulation.clear();
 				this->currentPopulation = std::move(this->nextPopulation);
 
-				#pragma omp parallel for
 				for (int j = 0; j < (int) this->currentPopulation.size(); j++) {
 					//int randNumber = this->getRandomNumber((int) this->currentPopulation.size());
 					this->currentPopulation[j]->mutate();
 					this->currentPopulation[j]->mutate();
 				}
 
-				#pragma omp parallel for
 				for (int j = 0; j < (int) this->currentPopulation.size(); j++) {
 					this->currentPopulation[j]->Repair(this->graph);
 				}
