@@ -48,8 +48,6 @@ class Individual {
 		};
 
 		Individual(const std::shared_ptr<Individual> & a, const std::shared_ptr<Individual> & b) {
-			std::random_device seed;
-			std::mt19937 generator(seed());
 			std::uniform_real_distribution<> distribution(0.0, 1.0);
 			this->size = a->size;
 			this->solution = new bool[this->size];
@@ -70,7 +68,7 @@ class Individual {
 
 		void Repair(std::shared_ptr<Graph> & graph) {
 			for (int i = 0; i < size; i++) {
-				if (this->solution[i]) continue;
+				if (solution[i]) continue;
 				std::vector<int> neighbour = graph->vertexNeighbour(i);
 				int size = (int) neighbour.size();
 				for (int j = 0; j < size; j++) {
@@ -95,7 +93,6 @@ class Individual {
 		}
 
 		void copy(const std::shared_ptr<Individual> & individual) {
-			#pragma omp parallel for shared(solution,individual)
 			for (int i = 0; i < size; i++) {
 				this->solution[i] = individual->solution[i];
 			}

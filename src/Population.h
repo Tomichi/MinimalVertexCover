@@ -69,15 +69,14 @@ class Population {
 				this->currentPopulation.clear();
 				this->currentPopulation = std::move(this->nextPopulation);
 
+				#pragma omp parallel for
 				for (int j = 0; j < (int) this->currentPopulation.size(); j++) {
 					//int randNumber = this->getRandomNumber((int) this->currentPopulation.size());
 					this->currentPopulation[j]->mutate();
 					this->currentPopulation[j]->mutate();
-				}
-
-				for (int j = 0; j < (int) this->currentPopulation.size(); j++) {
 					this->currentPopulation[j]->Repair(this->graph);
 				}
+
 				this->currentPopulation.emplace_back(this->best);
 
 				this->updateBestIndividual();
