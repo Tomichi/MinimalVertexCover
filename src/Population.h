@@ -5,7 +5,7 @@
 #include <memory>
 #include "Individual.h"
 
-const int SIZE_POPULATION = 200;
+const int SIZE_POPULATION = 20;
 
 class Population {
 	private:
