@@ -7,7 +7,6 @@ SET(CMAKE_CXX_COMPILER /usr/local/bin/g++-7)
 
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic -O2 -fopenmp")
 
-FIND_PACKAGE(OpenMP)
 
 
 add_executable(MinimalVertexCover
